@@ -1,11 +1,13 @@
 package com.example.springbootcrud.controller;
 
 import com.example.springbootcrud.model.User;
-import com.example.springbootcrud.service.UserService;
+import com.example.springbootcrud.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -15,10 +17,10 @@ import java.util.List;
 @Controller
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
@@ -40,11 +42,12 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("user-delete/{id}")
+    @DeleteMapping("/user-delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
         return "redirect:/users";
     }
+
 
     @GetMapping("/user-update/{id}")
     public String updateUserForm(@PathVariable("id") Long id, Model model) {
@@ -53,8 +56,12 @@ public class UserController {
         return "user-update";
     }
 
-    @PostMapping("/user-update")
-    public String updateUser(User user) {
+    @PatchMapping("/user-update/{id}")
+    public String updateUser(@PathVariable("id") Long id, User updatedUser) {
+        User user = userService.findById(id);
+        user.setName(updatedUser.getName());
+        user.setLastName(updatedUser.getLastName());
+        user.setAge(updatedUser.getAge());
         userService.saveUser(user);
         return "redirect:/users";
     }
