@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.List;
@@ -57,12 +58,21 @@ public class UserController {
     }
 
     @PatchMapping("/user-update/{id}")
-    public String updateUser(@PathVariable("id") Long id, User updatedUser) {
+    public String updateUser(@PathVariable("id") Long id, @RequestParam(value = "name", required = false) String name,
+                             @RequestParam(value = "lastName", required = false) String lastName,
+                             @RequestParam(value = "age", required = false) Integer age) {
         User user = userService.findById(id);
-        user.setName(updatedUser.getName());
-        user.setLastName(updatedUser.getLastName());
-        user.setAge(updatedUser.getAge());
+        if (name != null) {
+            user.setName(name);
+        }
+        if (lastName != null) {
+            user.setLastName(lastName);
+        }
+        if (age != null) {
+            user.setAge(age);
+        }
         userService.saveUser(user);
         return "redirect:/users";
     }
 }
+
