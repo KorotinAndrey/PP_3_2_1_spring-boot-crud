@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 public class User {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
@@ -24,8 +25,8 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, String lastName, int age) {
-        this.id = id;
+    public User(long id, String name, String lastName, int age) {
+        this.id= id;
         this.name = name;
         this.lastName = lastName;
         this.age = age;
